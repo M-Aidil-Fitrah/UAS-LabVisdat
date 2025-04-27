@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TourVista - Tourism Data Explorer</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+</head>
+
+<body class="bg-gray-50">
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h1 class="ml-2 text-xl font-bold text-gray-800">TourVista</h1>
+            </div>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#overview" class="text-gray-600 hover:text-blue-600 font-medium">Overview</a>
+                <a href="#arrivals" class="text-gray-600 hover:text-blue-600 font-medium">Arrivals</a>
+                <a href="#departures" class="text-gray-600 hover:text-blue-600 font-medium">Departures</a>
+                <a href="#safety" class="text-gray-600 hover:text-blue-600 font-medium">Safety</a>
+                <a href="#regions" class="text-gray-600 hover:text-blue-600 font-medium">Regions</a>
+            </nav>
+            <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md flex items-center">
+                Explore Data
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <section class="mb-12 text-center">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Explore Tourism Data</h2>
+            <p class="text-gray-600 max-w-3xl mx-auto">
+                Analyze trends, patterns, and insights from global tourism data across countries and time periods.
+            </p>
+        </section>
+
+        <section class="mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Filters</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label for="yearRange" class="block text-sm font-medium text-gray-700 mb-1">Year Range</label>
+                        <div class="flex items-center">
+                            <input type="number" id="yearStart" min="1950" max="2020" value="1990" 
+                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <span class="mx-2 text-gray-500">to</span>
+                            <input type="number" id="yearEnd" min="1950" max="2020" value="2020"
+                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="region" class="block text-sm font-medium text-gray-700 mb-1">Region</label>
+                        <select id="region" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option value="all">All Regions</option>
+                            <option value="Africa">Africa</option>
+                            <option value="Americas">Americas</option>
+                            <option value="Asia & Pacific">Asia & Pacific</option>
+                            <option value="Europe">Europe</option>
+                            <option value="Middle East">Middle East</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="country" class="block text-sm font-medium text-gray-700 mb-1">Country</label>
+                        <select id="country" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option value="all">All Countries</option>
+                            <!-- Will be populated via JavaScript -->
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end">
+                    <button id="resetFilters" class="mr-3 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        Reset
+                    </button>
+                    <button id="applyFilters" class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700">
+                        Apply Filters
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <section class="bg-white rounded-lg shadow">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Global Tourist Arrivals Trends</h3>
+                    <p class="text-sm text-gray-500 mb-4">Number of international tourist arrivals over time</p>
+                    <div id="arrivalsChart" class="h-64"></div>
+                </div>
+            </section>
+
+            <section class="bg-white rounded-lg shadow">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Top Countries by Tourist Arrivals (2019)</h3>
+                    <p class="text-sm text-gray-500 mb-4">Comparing number of international tourist arrivals across top countries</p>
+                    <div id="topCountriesChart" class="h-64"></div>
+                </div>
+            </section>
+        </div>
+
+        <div class="grid grid-cols-1 gap-8 mb-8">
+            <section class="bg-white rounded-lg shadow">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Regional Tourism Trends (1950-2020)</h3>
+                    <p class="text-sm text-gray-500 mb-4">International tourist arrivals by region over time</p>
+                    <div id="regionChart" class="h-72"></div>
+                </div>
+            </section>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <section class="bg-white rounded-lg shadow">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Tourist Departures per 1000 People</h3>
+                    <p class="text-sm text-gray-500 mb-4">Outbound tourism intensity by country</p>
+                    <div id="departuresChart" class="h-64"></div>
+                </div>
+            </section>
+
+            <section class="bg-white rounded-lg shadow">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Aviation Safety Trends</h3>
+                    <p class="text-sm text-gray-500 mb-4">Fatalities per million passengers over time</p>
+                    <div id="safetyChart" class="h-64"></div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <h1 class="ml-2 text-xl font-bold">TourVista</h1>
+                    </div>
+                    <p class="mt-2 text-gray-400 text-sm">
+                        Explore global tourism data and trends
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold uppercase tracking-wider mb-3">Data Sources</h3>
+                    <ul class="text-gray-400 text-sm space-y-2">
+                        <li>International Tourist Arrivals</li>
+                        <li>Tourist Departures per 1000 People</li>
+                        <li>Air Passenger Safety Statistics</li>
+                        <li>Regional Tourism Data</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-8 pt-6 border-t border-gray-700 text-sm text-gray-400 text-center">
+                <p>© 2025 TourVista. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/dataService.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
