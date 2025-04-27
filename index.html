@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Air Passengers Visualization</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts - Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- TomSelect for searchable dropdown -->
+  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
+  <!-- Save SVG as PNG -->
+  <script src="https://cdn.jsdelivr.net/npm/save-svg-as-png@1.4.17/lib/saveSvgAsPng.js"></script>
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans">
+
+  <!-- Splash Screen -->
+  <div id="splash-screen" class="splash-screen">
+    <svg width="120" height="120" viewBox="0 0 24 24" class="splash-icon">
+      <circle cx="12" cy="12" r="10" class="splash-circle" stroke-width="2" stroke-opacity="0.3"></circle>
+      <path d="M22 12h-4l-3 9L9 3l-3 9H2" class="splash-plane"></path>
+    </svg>
+    <h1 class="splash-title">Air Passengers Data</h1>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div id="loading-spinner" class="fixed inset-0 bg-white/80 dark:bg-black/80 flex items-center justify-center z-50 hidden">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <div class="container mx-auto px-4 py-8">
+    <header class="mb-8 text-center">
+      <h1 class="text-4xl font-bold mb-2 opacity-0" id="main-title" style="animation: fadeUpIn 0.8s ease forwards 0.5s">Air Passengers Data Visualization</h1>
+      <p class="text-gray-600 dark:text-gray-300 opacity-0" id="main-subtitle" style="animation: fadeUpIn 0.8s ease forwards 0.7s">Explore passenger data across countries and years</p>
+    </header>
+
+    <div class="card p-6 opacity-0" id="main-card" style="animation: fadeUpIn 0.8s ease forwards 0.9s">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+        <div class="w-full md:w-1/3">
+          <label for="country-select" class="block text-sm font-medium mb-1">Country</label>
+          <select id="country-select" placeholder="Select a country"></select>
+        </div>
+
+        <div class="w-full md:w-1/3">
+          <label for="year-start" class="block text-sm font-medium mb-1">Start Year</label>
+          <select id="year-start" class="w-full"></select>
+        </div>
+
+        <div class="w-full md:w-1/3">
+          <label for="year-end" class="block text-sm font-medium mb-1">End Year</label>
+          <select id="year-end" class="w-full"></select>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap justify-between items-center mb-6">
+        <div class="flex space-x-2">
+          
+          <!-- Toggle Chart Type Button (Added to support main.js functionality) -->
+          <button id="toggle-chart-type" class="btn-outline flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chart-icon-bar">
+              <path d="M6 16v4"></path>
+              <path d="M12 12v8"></path>
+              <path d="M18 8v12"></path>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chart-icon-line hidden">
+              <path d="M3 8L7 4 13 10 17 6 21 10"></path>
+              <path d="M17 6V10H21"></path>
+            </svg>
+            <span class="chart-type-label ml-1">Switch to Line Chart</span>
+          </button>
+        </div>
+        
+        <div>
+          <button id="export-png" class="btn-primary flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Download PNG</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="chart-info" class="mb-6 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg hidden">
+        <h2 id="chart-title" class="font-bold text-xl mb-2"></h2>
+        <p id="chart-description" class="text-gray-600 dark:text-gray-300"></p>
+      </div>
+
+      <div class="chart-container overflow-hidden rounded-lg">
+        <!-- Changed ID to match what's used in the JS files -->
+        <svg id="chart-container" class="w-full h-[400px] dark:bg-gray-800 bg-white rounded-lg"></svg>
+      </div>
+    </div>
+
+    <footer class="mt-8 text-center text-sm text-gray-400 dark:text-gray-500 opacity-0" id="footer" style="animation: fadeUpIn 0.8s ease forwards 1.1s">
+      © 2025 Air Passengers Data Visualization
+    </footer>
+  </div>
+
+  <!-- Added toggle theme functionality -->
+  <script>
+    document.getElementById('toggle-theme').addEventListener('click', function() {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+  </script>
+
+  <script src="js/d3.v7.min.js"></script>
+  <script src="js/barchart.js"></script>
+  <script src="js/linechart.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

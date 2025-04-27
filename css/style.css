@@ -1,0 +1,361 @@
+/* Custom styles to complement Tailwind */
+:root {
+  --primary: #10b981;
+  --primary-hover: #059669;
+  --primary-light: #d1fae5;
+  --text: #1f2937;
+  --text-light: #6b7280;
+  --background: #f9fafb;
+  --card: #ffffff;
+  --border: #e5e7eb;
+}
+
+.dark {
+  --primary: #10b981;
+  --primary-hover: #34d399;
+  --primary-light: #064e3b;
+  --text: #f9fafb;
+  --text-light: #9ca3af;
+  --background: #111827;
+  --card: #1f2937;
+  --border: #374151;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+select, button {
+  transition: all 0.2s ease;
+}
+
+.container {
+  max-width: 1200px;
+}
+
+/* D3 Visualization Styles */
+.bar {
+  fill: var(--primary);
+  transition: fill 0.3s ease, transform 0.2s ease;
+}
+
+.bar:hover {
+  fill: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+.brush .selection {
+  fill: var(--primary);
+  fill-opacity: 0.2;
+  stroke: var(--primary-hover);
+  stroke-width: 1px;
+}
+
+.axis text {
+  font-size: 12px;
+  font-family: 'Inter', system-ui, sans-serif;
+  fill: var(--text-light);
+  transition: fill 0.3s ease;
+}
+
+.axis path,
+.axis line {
+  stroke: var(--border);
+  transition: stroke 0.3s ease;
+}
+
+.x-axis .domain {
+  display: none;
+}
+
+.y-axis .domain {
+  display: none;
+}
+
+.x-axis .tick line {
+  stroke: var(--border);
+  stroke-opacity: 0.5;
+  transition: stroke 0.3s ease;
+}
+
+.y-axis .tick line {
+  stroke: var(--border);
+  stroke-opacity: 0.5;
+  stroke-dasharray: 2,2;
+  transition: stroke 0.3s ease;
+}
+
+/* Chart Title & Info */
+.chart-title {
+  font-size: 18px;
+  font-weight: 600;
+  text-anchor: middle;
+  fill: var(--text);
+  transition: fill 0.3s ease;
+}
+
+.chart-subtitle {
+  font-size: 14px;
+  text-anchor: middle;
+  fill: var(--text-light);
+  transition: fill 0.3s ease;
+}
+
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  padding: 12px 16px;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  pointer-events: none;
+  font-size: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: opacity 0.3s ease;
+  z-index: 1000;
+  max-width: 250px;
+}
+
+.tooltip-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+/* Splash Screen */
+.splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--background);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease;
+}
+
+.splash-icon {
+  stroke: var(--primary);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.splash-title {
+  margin-top: 1.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUpIn 0.8s ease forwards 0.3s;
+}
+
+.splash-plane {
+  animation: fly 2s ease-in-out infinite;
+}
+
+.splash-circle {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes fly {
+  0% {
+    transform: translateX(-10px) translateY(5px);
+  }
+  50% {
+    transform: translateX(10px) translateY(-5px);
+  }
+  100% {
+    transform: translateX(-10px) translateY(5px);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+}
+
+@keyframes fadeUpIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* UI Elements */
+.card {
+  background-color: var(--card);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Tom Select customization */
+.ts-wrapper .ts-control {
+  background-color: var(--card) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+  border-radius: 0.375rem !important;
+  transition: all 0.3s ease;
+}
+
+.ts-wrapper.focus .ts-control {
+  box-shadow: 0 0 0 2px var(--primary-light) !important;
+  border-color: var(--primary) !important;
+}
+
+.ts-dropdown {
+  background-color: var(--card) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+  border-radius: 0.375rem !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.ts-dropdown .active {
+  background-color: var(--primary-light) !important;
+  color: var(--primary) !important;
+}
+
+.ts-dropdown .option:hover {
+  background-color: var(--primary-light) !important;
+}
+
+/* Animations for chart elements */
+@keyframes chartFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chart-container {
+  animation: chartFadeIn 0.8s ease-out;
+}
+
+/* Custom form elements */
+select {
+  appearance: none;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  padding: 0.5rem 2rem 0.5rem 1rem;
+  color: var(--text);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+}
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.btn-outline:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background-color: var(--primary-light);
+}
+
+/* Loading animation */
+.loading-spinner {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+
+.loading-spinner:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid var(--primary);
+  border-color: var(--primary) transparent var(--primary) transparent;
+  animation: spinner 1.2s linear infinite;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .chart-title {
+    font-size: 16px;
+  }
+  
+  .chart-subtitle {
+    font-size: 12px;
+  }
+}
